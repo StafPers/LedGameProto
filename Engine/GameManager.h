@@ -41,6 +41,7 @@ private:
 	/********************************/
 private:
 	MainWindow& wnd;
+	bool game_started = false;
 	Graphics gfx;
 	IGame* current_game = nullptr;
 	Color leds[NUM_LEDS];

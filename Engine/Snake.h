@@ -14,6 +14,7 @@ public:
 	void update(int input) override;
 	void fillScreenBuf(Color* leds) override;
 	bool isAlive() const override { return is_alive; };
+	bool progressDeathAnimation() override;
 
 private:
 	void spawnApple();
@@ -26,6 +27,7 @@ private:
 	Location direction = { 0, 0 };
 	Location apple_pos;
 	char length = 2;
+	char death_animation_progress = 0;
 	bool use_borders = true;
 	Color colors[NUM_BODY_COLORS];
 };

@@ -87,18 +87,39 @@ void Snake::update(int input)
 
 void Snake::fillScreenBuf(Color * leds)
 {
-	leds[segments[0].x + DIMS * segments[0].y] = Colors::Yellow;
 	leds[apple_pos.x + DIMS * apple_pos.y] = Colors::Red;
-
-	for (int i = 1; i < length; ++i)
-		leds[segments[i].x + DIMS * segments[i].y] = colors[i % NUM_BODY_COLORS];
+	leds[segments[0].x + DIMS * segments[0].y] = Colors::Yellow;
 
 	if (use_borders)
 	{
 		for (int x = 0; x < DIMS; ++x)
-			leds[x] = leds[x + DIMS * (DIMS - 1)] = 
+			leds[x] = leds[x + DIMS * (DIMS - 1)] =
 			leds[DIMS * x] = leds[DIMS - 1 + DIMS * x] = Colors::Blue;
 	}
+
+	if (is_alive)
+	{
+		for (int i = 1; i < length; ++i)
+			leds[segments[i].x + DIMS * segments[i].y] = colors[i % NUM_BODY_COLORS];
+	}
+	else
+	{
+		for (int i = 0; i < death_animation_progress; ++i)
+			leds[segments[i].x + DIMS * segments[i].y] = Colors::Red;
+
+		for (int i = death_animation_progress; i < length; ++i)
+			leds[segments[i].x + DIMS * segments[i].y] = colors[i % NUM_BODY_COLORS];
+	}
+	
+}
+
+bool Snake::progressDeathAnimation()
+{
+	if (death_animation_progress == length)
+		return false;
+
+	++death_animation_progress;
+	return true;
 }
 
 void Snake::spawnApple()

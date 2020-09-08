@@ -26,9 +26,9 @@
 Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
-	gfx(wnd)
+	gfx(wnd),
+	current_game(nullptr)
 {
-	current_game = new Snake();
 }
 
 void Game::Go()
@@ -41,6 +41,17 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	if (!game_started)
+	{
+		if (wnd.kbd.KeyIsPressed(VK_RETURN))
+		{
+			current_game = new Snake();
+			game_started = true;
+		}
+		else
+			return;
+	}
+
 	if (current_game->isAlive())
 	{
 		int input = VK_CANCEL;
@@ -72,6 +83,13 @@ void Game::UpdateModel()
 
 		current_game->update(input);
 	}
+	else 
+	{
+		if (!current_game->progressDeathAnimation())
+			game_started = false;
+
+		Sleep(100);
+	}
 }
 
 void Game::ComposeFrame()
@@ -86,7 +104,8 @@ void Game::ComposeFrame()
 	for (int i = 0; i < NUM_LEDS; ++i)
 		leds[i] = Colors::Black;
 
-	current_game->fillScreenBuf(leds);
+	if(current_game)
+		current_game->fillScreenBuf(leds);
 
 	const int padding = 2;
 	for (int x = 0; x < DIMS; ++x)
